@@ -16,7 +16,7 @@ export const GitProvider = ({ children }) => {
   const [data, setData] = useState([]);
 
 
-//llamada a la API para obtener repositorios y usuarios.
+//llamada a la API para obtener repositorios y usuarios
   const searchRepoAndUser = async (query) => {
     setLoading(true);
     try {
