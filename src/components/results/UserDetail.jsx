@@ -17,14 +17,14 @@ const DetailsStyle = styled.div`
 
 const UserDetail = () => {
   const { login } = useParams();
-  const { users, following, follower, getUserDetails, data } = useGitContext();
+  const { users, getUserDetails, data } = useGitContext();
 
   const user = users.find((user) => user.login === login);
 
 //llamo a la funcion cuando se ingresa al usuario
   useEffect(() => {
     getUserDetails(login);
-  });
+  }, [login]);
 
   return (
     <div>
@@ -34,14 +34,13 @@ const UserDetail = () => {
           <p>{user.login}</p>
           <img src={user.avatar_url} alt="avatar" height="200px" />
 
-          <p>Seguidores: {follower.length}</p>
-          <p>Seguidos: {following.length}</p>
         </UserStyle>
 
         <DetailsStyle>
           <h4>Bio:</h4>
           <p>{data.bio}</p>
           <p>Usuario desde: {new Date(data.created_at).toLocaleDateString()}</p>
+          <p>Link a GitHub: <a href={data.html_url} target="_blank" rel="noopener noreferrer">{data.html_url}</a></p>
         </DetailsStyle>
       </ContainerStyle>
     </div>

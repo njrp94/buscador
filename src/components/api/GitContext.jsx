@@ -11,8 +11,6 @@ export const GitProvider = ({ children }) => {
   const [repos, setRepos] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [following, setFollowing] = useState([]);
-  const [follower, setFollower] = useState([]);
   const [data, setData] = useState([]);
 
 
@@ -39,20 +37,11 @@ const getUserDetails = async (username) => {
   setLoading(true);
   try {
     const userDataRespose = await axios.get(`https://api.github.com/users/${username}`);
-    const followingResponse = await axios.get(`https://api.github.com/users/${username}/following`);
-    const followerResponse = await axios.get(`https://api.github.com/users/${username}/followers`);
-    
     const data = userDataRespose.data;
-    const followerList = followerResponse.data;
-    const followingList = followingResponse.data;
-
-    setFollower(followerList);
-    setFollowing(followingList);
+  
     setData(data);
     
   } catch (error) {
-    setFollower([])
-    setFollowing([]);
     setData([]);
     
   } finally {
@@ -61,7 +50,7 @@ const getUserDetails = async (username) => {
 };
 
 return (
-  <GitContext.Provider value={{ repos, users, searchRepoAndUser, getUserDetails, following, data, follower, loading }}>
+  <GitContext.Provider value={{ repos, users, searchRepoAndUser, getUserDetails, data, loading }}>
     {children}
   </GitContext.Provider>
 );
