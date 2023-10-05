@@ -7,34 +7,31 @@ import RepoList from './components/results/RepoList';
 import styled from 'styled-components';
 
 const LogoStyle = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
-    `;
-
- 
 function App() {
   return (
-      <div>
-        <LogoStyle>
-        <img src={require('./img/github-mark.png')} alt="logo"/>
-        </LogoStyle>
-        <Routes>
-          <Route path="/" element={<Home/>} />
-          <Route path="/repo/:id" element={<RepoDetail />} />
-          <Route path="/user/:login" element={<UserDetail />} />
-
-        </Routes>
-      </div>
+    <div>
+      <LogoStyle>
+        <img src={require('./img/github-mark.png')} alt="logo" />
+      </LogoStyle>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/repo/:id" element={<RepoDetail />} />
+        <Route path="/user/:login" element={<UserDetail />} />
+      </Routes>
+    </div>
   );
 }
 
 function Home() {
   return (
     <>
-      <SearchBar/>
-      <RepoList/>
+      <SearchBar />
+      <RepoList />
     </>
   );
 }

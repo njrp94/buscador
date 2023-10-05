@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
+import Pagination from './Pagination';
 import styled from 'styled-components';
 
 const ListStyle = styled.div`
@@ -36,12 +37,18 @@ const ListStyle = styled.div`
 `;
 
 const RepoList = () => {
-  const { repos, users, loading } = useGitContext();
+  const { repos, users, loading, currentPage, itemsPerPage} = useGitContext();
+
 
   if (loading) {
     return <p>Buscando...</p>;
   }
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const reposToShow = repos.slice(startIndex, endIndex);
+  const usersToshow = users.slice(startIndex, endIndex);
+  
   return (
     <div>
       <ListStyle>
@@ -49,7 +56,7 @@ const RepoList = () => {
           <div className="list-container">
             <h3>Repositorios</h3>
             <ul>
-              {repos.map((item) => (
+              {reposToShow.map((item) => (
                 <li key={item.id}>
                   <Link to={`/repo/${item.id}`} state={{ repo: item }}>
                     <h4>{item.name} Favs: {item.stargazers_count} </h4>
@@ -65,7 +72,7 @@ const RepoList = () => {
           <div className="list-container">
             <h3>Usuarios</h3>
             <ul>
-              {users.map((item) => (
+              {usersToshow.map((item) => (
                 <li key={item.login}>
                   {item.login && (
                     <Link to={`/user/${item.login}`} state={{ user: item }}>
@@ -75,9 +82,13 @@ const RepoList = () => {
               </li>
             ))}
           </ul>
+          <Pagination/>
         </div>
+        
       )}
+      
     </ListStyle>
+    
   </div>
   );
 };

@@ -37,11 +37,18 @@ const SearchBar = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && query.trim() !== '') {
+      searchRepoAndUser(query);
+    }
+  };
+
   return (
     <ContainerStyle>
       <SearchStyle type="text" placeholder="Buscar en GitHub"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <ButtonStyle onClick={handleSearch}>Buscar</ButtonStyle>
     </ContainerStyle>
