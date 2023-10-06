@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import Pagination from './Pagination';
@@ -16,8 +16,6 @@ const ListStyle = styled.div`
     min-width: 400px;
     max-width: 800px;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
     ;
   }
 
@@ -82,15 +80,16 @@ const RepoList = () => {
               </li>
             ))}
           </ul>
-          <Pagination/>
         </div>
-        
       )}
-      
     </ListStyle>
-    
+  <Pagination/>
   </div>
+
   );
+  
 };
+
+
 
 export default RepoList;

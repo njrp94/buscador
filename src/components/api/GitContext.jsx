@@ -14,7 +14,7 @@ export const GitProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
   
   const changePage = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -30,13 +30,13 @@ const searchRepoAndUser = async (query, page, perPage) => {
     const userResponse = await axios.get(`https://api.github.com/search/users?q=${query}&page=${page}&per_page=${perPage}`);
     
     const totalCount = repoResponse.data.total_count;
+    const totalUsers = userResponse.data.total_count;
     console.log('Total de elementos:', totalCount);
+    console.log('total de usuarios:', totalUsers);
 
     setRepos(repoResponse.data.items);
     setUsers(userResponse.data.items);
-    setTotalItems(totalCount);
-
-    console.log('items por pagina', itemsPerPage);
+    setTotalItems(totalCount, totalUsers);
     
   } catch (error) {
     setRepos([]);
