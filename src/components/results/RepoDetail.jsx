@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import styled from 'styled-components';
+import StarRateIcon from '@mui/icons-material/StarRate';
 
 const ContainerStyle = styled.div`
     display:flex;
@@ -16,6 +17,10 @@ const UserStyle = styled.div`
 const DetailsStyle = styled.div`
     margin-left: 50px;
 
+    p {
+    text-align: center:
+
+    }
     `;
 
 const RepoDetail = () => {
@@ -39,7 +44,7 @@ const RepoDetail = () => {
             <p>Lenguaje principal: {repo.language}</p>
             <p>Tamaño del repositorio: {`${(repo.size / (1024 * 1024)).toFixed(3)} MB`}</p>
             <p>Última actualización: {new Date(repo.updated_at).toLocaleDateString()}</p>
-            <p>Favs: {repo.stargazers_count}</p>
+            <p><StarRateIcon></StarRateIcon> {repo.stargazers_count}</p>
             <p>Link a GitHub: <a href={repo.html_url} target="_blank" rel="noopener noreferrer">{repo.html_url}</a></p>
         </DetailsStyle>
 

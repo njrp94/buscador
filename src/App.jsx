@@ -16,7 +16,7 @@ function App() {
   return (
     <div>
       <LogoStyle>
-        <img src={require('./img/github-mark.png')} alt="logo" />
+        <img src={require('./img/GitHub-Logo.png')} alt="logo" height="220px"/>
       </LogoStyle>
       <Routes>
         <Route path="/" element={<Home />} />

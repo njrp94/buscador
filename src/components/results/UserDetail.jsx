@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import styled from 'styled-components';
+import { ArrowLeft } from '@mui/icons-material';
 
 const ContainerStyle = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ const UserDetail = () => {
     <div>
       <ContainerStyle>
         <UserStyle>
-          <Link to="/">Volver al listado</Link>
+          <Link to="/"><ArrowLeft></ArrowLeft></Link>
           <p>{user.login}</p>
           <img src={user.avatar_url} alt="avatar" height="200px" />
 

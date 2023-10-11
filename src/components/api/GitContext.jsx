@@ -20,7 +20,6 @@ export const GitProvider = ({ children }) => {
     setCurrentPage(pageNumber);
     console.log('cambiar a pagina', pageNumber);
   };
-  
 
 //llamada a la API para obtener repositorios y usuarios
 const searchRepoAndUser = async (query, page, perPage) => {
@@ -31,8 +30,6 @@ const searchRepoAndUser = async (query, page, perPage) => {
     
     const totalCount = repoResponse.data.total_count;
     const totalUsers = userResponse.data.total_count;
-    console.log('Total de elementos:', totalCount);
-    console.log('total de usuarios:', totalUsers);
 
     setRepos(repoResponse.data.items);
     setUsers(userResponse.data.items);
@@ -64,7 +61,18 @@ const getUserDetails = async (username) => {
 };
 
 return (
-  <GitContext.Provider value={{ repos, users, searchRepoAndUser, getUserDetails, data, loading, changePage, currentPage, itemsPerPage, totalItems }}>
+  <GitContext.Provider value={{
+    repos,
+    users,
+    searchRepoAndUser,
+    getUserDetails,
+    data,
+    loading,
+    changePage,
+    currentPage,
+    itemsPerPage,
+    totalItems,
+    }}>
     {children}
   </GitContext.Provider>
 );

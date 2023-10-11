@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate';
 import styled from 'styled-components';
 
 const PaginationStyle = styled.div`
-display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
@@ -40,21 +40,19 @@ display: flex;
   
 
 const Pagination = () => {
-    const { changePage } = useGitContext();
+    const { repos, itemsPerPage, changePage } = useGitContext();
 
-  const handlePageClick = (selected) => {
+const pageCount = Math.ceil(repos.length / itemsPerPage);
+
+const handlePageClick = (selected) => {
     changePage(selected + 1);
   };
-
-
-  //const pagesToShow = pageCount <= maxPagesToShow ? pageCount : maxPagesToShow;
-
 
   return (
     <PaginationStyle>
         <ReactPaginate
-        pageCount={3}
-        pageRangeDisplayed={3}
+        pageCount={pageCount}
+        pageRangeDisplayed={2}
         marginPagesDisplayed={2}
         onPageChange={({ selected }) => handlePageClick(selected)}
         containerClassName={'pagination'}

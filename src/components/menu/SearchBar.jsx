@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useGitContext } from '../api/GitContext';
 import styled from 'styled-components';
+import { Search } from '@mui/icons-material';
 
 const ContainerStyle = styled.div`
   display: flex;
@@ -9,22 +10,27 @@ const ContainerStyle = styled.div`
 `;
 
 const SearchStyle = styled.input`
-  padding: 10px;
-  margin-top: 10px;
+  padding: 14px;
+  margin-top: 20px;
   border: 2px solid #ccc;
-  border-radius: 10px;
+  border-radius: 10px 0 0 10px;
   font-size: 15px;
-  width: 300px;
+  width: 400px;
 `;
 
 const ButtonStyle = styled.button`
-  padding: 10px 20px;
-  margin: 10px 0 0 10px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  font-size: 15px;
-  background-color: white;
-  color: black;
+    padding: 12px;
+    margin: 20px 0 0 0px;
+    border: 0px solid white;
+    border-radius: 0 10px 10px 0;
+    font-size: 5px;
+    background-color: purple;
+    color: black;
+
+    span {
+      color: white;
+    }
+    
 `;
 
 const SearchBar = () => {
@@ -50,7 +56,7 @@ const SearchBar = () => {
         onChange={(e) => setQuery(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      <ButtonStyle onClick={handleSearch}>Buscar</ButtonStyle>
+      <ButtonStyle onClick={handleSearch}><span><Search/></span></ButtonStyle>
     </ContainerStyle>
   );
 };
