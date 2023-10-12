@@ -10,7 +10,7 @@ const ContainerStyle = styled.div`
 `;
 
 const SearchStyle = styled.input`
-  padding: 14px;
+  padding: 13px;
   margin-top: 20px;
   border: 2px solid #ccc;
   border-radius: 10px 0 0 10px;
@@ -19,7 +19,7 @@ const SearchStyle = styled.input`
 `;
 
 const ButtonStyle = styled.button`
-    padding: 12px;
+    padding: 11px;
     margin: 20px 0 0 0px;
     border: 0px solid white;
     border-radius: 0 10px 10px 0;

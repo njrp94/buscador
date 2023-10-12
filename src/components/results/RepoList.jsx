@@ -21,7 +21,6 @@ const ListStyle = styled.div`
     ;
   }
 
-
   .repo-info {
     display: flex; 
     align-items: center;
@@ -63,6 +62,12 @@ const ListStyle = styled.div`
   a {
     text-decoration: none;
   }
+
+  ul h3 {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const LoadingStyle = styled.div`
@@ -95,15 +100,17 @@ const RepoList = () => {
         {repos.length > 0 && (
           <div className="list-container">
             <ul>
-              <h3> <FolderShared></FolderShared> Repositorios</h3>
+              <h3><FolderShared/> Repositorios</h3>
+
               {reposToShow.map((item) => (
                 <li key={item.id}>
                   <Link to={`/repo/${item.id}`} state={{ repo: item }}>
+
                     <div className="repo-info">
                       {item.name}
-                      <span><StarRateIcon />{item.stargazers_count}
-                      </span>
+                      <span><StarRateIcon />{item.stargazers_count}</span>
                     </div>
+
                   </Link>
                   {item.description && <p>{item.description}</p>}
                 </li>
@@ -115,11 +122,13 @@ const RepoList = () => {
         {users.length > 0 && (
           <div className="list-container">
             <ul>
-              <h3><PeopleAlt></PeopleAlt> Usuarios</h3>
+              <h3><PeopleAlt/> Usuarios</h3>
+
               {usersToshow.map((item) => (
                 <li key={item.login}>
                   {item.login && (
                     <Link to={`/user/${item.login}`} state={{ user: item }}>
+
                     <div className="user-info">
                       <img src={item.avatar_url} alt="avatar" height="60px"/>
                       {item.login}

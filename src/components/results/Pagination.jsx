@@ -31,7 +31,7 @@ const PaginationStyle = styled.div`
       &.previous,
       &.next {
         a {
-          background-color: #007bff;
+          background-color: purple;
           color: #fff;
         }
       }
