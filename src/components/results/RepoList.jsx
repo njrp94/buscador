@@ -104,14 +104,14 @@ const RepoList = () => {
 
               {reposToShow.map((item) => (
                 <li key={item.id}>
+                  
                   <Link to={`/repo/${item.id}`} state={{ repo: item }}>
-
                     <div className="repo-info">
                       {item.name}
                       <span><StarRateIcon />{item.stargazers_count}</span>
                     </div>
-
-                  </Link>
+                    </Link>
+                    
                   {item.description && <p>{item.description}</p>}
                 </li>
               ))}

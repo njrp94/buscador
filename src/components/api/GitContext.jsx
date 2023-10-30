@@ -17,10 +17,9 @@ export const GitProvider = ({ children }) => {
   
   const changePage = (pageNumber) => {
     setCurrentPage(pageNumber);
-    console.log('cambiar a pagina', pageNumber);
-  };
+    };
 
-//llamada a la API para obtener repositorios y usuarios
+//llamada a la API para obtener repositorios y usuarios. Utilizada en RepoDetail / RepoList
 const searchRepoAndUser = async (query, page, perPage) => {
   setLoading(true);
   try {
@@ -38,7 +37,7 @@ const searchRepoAndUser = async (query, page, perPage) => {
   }
 };
 
-//llamada a la API para obtener data del usuario seleccionado. Agregar mas llamados para otras caracteristcas (seguidores, etc)
+//llamada a la API para obtener data del usuario. Utilizada en UserDetail
 const getUserDetails = async (username) => {
   setLoading(true);
   try {

@@ -54,10 +54,9 @@ const UserDetail = () => {
 
   const user = users.find((user) => user.login === login);
 
-//llamo a la funcion cuando se ingresa al usuario
   useEffect(() => {
     getUserDetails(login);
-  }, [login]);
+  },);
 
   return (
       <div>
