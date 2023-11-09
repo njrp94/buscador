@@ -33,32 +33,61 @@ const ButtonStyle = styled.button`
     
 `;
 
-const SearchBar = () => {
-  const { searchRepoAndUser } = useGitContext();
+const SelectStyle = styled.select`
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 15px;
+  margin-left: 10px;
+`;
+
+
+const SearchBar = ({ onFilterChange, selectedFilter }) => {
+  const { searchRepoAndUser} = useGitContext();
   const [query, setQuery] = useState('');
 
-  const handleSearch = () => {
+  const handleSearch = (selectedFilter) => {
     if (query.trim() !== '') {
-      searchRepoAndUser(query);
+      searchRepoAndUser(query, selectedFilter);
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e, selectedFilter) => {
     if (e.key === 'Enter' && query.trim() !== '') {
-      searchRepoAndUser(query);
+      searchRepoAndUser(query, selectedFilter);
     }
   };
+  
+  const handleFilterChange = (e) => {
+    const newFilter = e.target.value;
+
+    console.log('selected Filter:', selectedFilter);
+    console.log('New Filter:', newFilter);
+    onFilterChange(newFilter);
+  };
+
 
   return (
     <ContainerStyle>
-      <SearchStyle type="text" placeholder="Buscar en GitHub"
+      <SelectStyle value={selectedFilter} onChange={handleFilterChange}>
+        <option value="">-</option>
+        <option value="today">Hoy</option>
+        <option value="2weeks">Hace 2 semanas</option>
+        <option value="1month">Hace 1 mes</option>
+      </SelectStyle>
+      <SearchStyle
+        type="text"
+        placeholder="Buscar en GitHub"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      <ButtonStyle onClick={handleSearch}><span><Search/></span></ButtonStyle>
+      
+      <ButtonStyle onClick={handleSearch}>
+        <span>
+          <Search />
+        </span>
+      </ButtonStyle>
     </ContainerStyle>
   );
 };
-
 export default SearchBar;

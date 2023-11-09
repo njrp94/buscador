@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import UserDetail from './components/results/UserDetail';
 import RepoDetail from './components/results/RepoDetail';
@@ -13,13 +13,25 @@ const LogoStyle = styled.div`
 `;
 
 function App() {
+  const [filter, setFilter] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('');
+
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setSelectedFilter(newFilter);
+
+  };
+
+
   return (
     <div>
       <LogoStyle>
         <img src={require('./img/GitHub-Logo.png')} alt="logo" height="220px"/>
       </LogoStyle>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/"
+         element={<Home handleFilterChange={handleFilterChange} filter={filter} selectedFilter={selectedFilter}/>} />
         <Route path="/repo/:id" element={<RepoDetail />} />
         <Route path="/user/:login" element={<UserDetail />} />
       </Routes>
@@ -27,11 +39,12 @@ function App() {
   );
 }
 
-function Home() {
+function Home({ handleFilterChange, filter, selectedFilter }) {
   return (
     <>
-      <SearchBar />
-      <RepoList />
+      <SearchBar onFilterChange={handleFilterChange} selectedFilter={selectedFilter} />
+      <RepoList filter={filter} />
+      
     </>
   );
 }

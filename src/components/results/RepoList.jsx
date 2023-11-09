@@ -76,15 +76,9 @@ const LoadingStyle = styled.div`
 
 ;`
 
-const RepoList = () => {
+const RepoList = ({ filter }) => {
   const { repos, users, loading, currentPage, itemsPerPage} = useGitContext();
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const reposToShow = repos.slice(startIndex, endIndex);
-  const usersToshow = users.slice(startIndex, endIndex);
-
-  const showPagination = reposToShow.length > 0 || usersToshow.length > 0;
 
   if (loading) {
     return <div>
@@ -93,6 +87,40 @@ const RepoList = () => {
       </LoadingStyle>
       </div>
   };
+
+  let filteredRepos = repos;
+
+  if (filter === 'today') {
+    const filterToday = new Date().toISOString().slice(0, 10);
+    filteredRepos = repos.filter(repo => repo.updated_at.slice(0, 10) === filterToday);
+
+  } else if (filter === '2weeks') {
+    const today = new Date();
+    const filterTwoWeeks = new Date(today);
+    filterTwoWeeks.setDate(filterTwoWeeks.getDate() - 14);
+
+    filteredRepos = repos.filter(repo => {
+      const updatedAt = new Date(repo.updated_at);
+      return updatedAt >= filterTwoWeeks && updatedAt <= today;
+    });
+
+  } else if (filter === '1month') {
+    const today = new Date();
+    const filterMonth = new Date(today);
+    filterMonth.setDate(filterMonth.getDate() - 30);
+
+    filteredRepos = repos.filter(repo => {
+      const updatedAt = new Date(repo.updated_at);
+      return updatedAt >= filterMonth && updatedAt <= today;
+    });
+  } 
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const reposToShow = filteredRepos.slice(startIndex, endIndex);
+  const usersToshow = users.slice(startIndex, endIndex);
+  let showPagination = filteredRepos.length > 0 || usersToshow.length > 0;
   
   return (
     <div>
@@ -113,6 +141,7 @@ const RepoList = () => {
                     </Link>
                     
                   {item.description && <p>{item.description}</p>}
+                  <p>Ultima actualizacion: {new Date(item.updated_at).toLocaleDateString()}</p>
                 </li>
               ))}
             </ul>

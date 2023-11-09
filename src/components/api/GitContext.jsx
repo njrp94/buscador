@@ -28,6 +28,7 @@ const searchRepoAndUser = async (query, page, perPage) => {
 
     setRepos(repoResponse.data.items);
     setUsers(userResponse.data.items);
+    console.log(repos.length);
     
   } catch (error) {
     setRepos([]);
@@ -63,7 +64,7 @@ return (
     loading,
     changePage,
     currentPage,
-    itemsPerPage,
+    itemsPerPage
         }}>
     {children}
   </GitContext.Provider>
