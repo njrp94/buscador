@@ -48,42 +48,71 @@ const DetailsStyle = styled.div`
     }
     `;
 
+const ReposList = styled.div`
+    margin: 25px 0 0 100px;
+
+    a {
+        text-decoration: none;
+        color: darkblue;
+    }
+
+    .description p {
+        margin-top: 4px;
+    }
+
+    .description span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    `;
+
+
 const UserDetail = () => {
   const { login } = useParams();
-  const { users, getUserDetails, data } = useGitContext();
-
+  const { users, getUserDetails, userData, reposData } = useGitContext();
   const user = users.find((user) => user.login === login);
 
   useEffect(() => {
     getUserDetails(login);
-  },);
+    console.log(reposData);
+  }, [login]);
+
 
   return (
-      <div>
+    <div>
       <ContainerStyle>
         <div className='arrow'>
-            <Link to="/"><span><ArrowBackOutlined/></span></Link>
+          <Link to="/"><span><ArrowBackOutlined /></span></Link>
         </div>
-        
+
         <UserStyle>
           <img src={user.avatar_url} alt="avatar" height="200px" />
-           </UserStyle>
+        </UserStyle>
 
         <DetailsStyle>
           <div className='title'>
-          <h1>{user.login && user.login}</h1>
+            <h1>{userData.login}</h1>
           </div>
 
           <div className='description'>
-          <p>{data.bio}</p>
-          <p>Usuario desde: {new Date(data.created_at).toLocaleDateString()}</p>
-          <span><InsertLink/><a href={data.html_url} target="_blank" rel="noopener noreferrer">{data.html_url}</a></span>
-
+            <p>{userData.bio}</p>
+            <p>Usuario desde: {new Date(userData.created_at).toLocaleDateString()}</p>
+            <span><InsertLink /><a href={userData.html_url} target="_blank" rel="noopener noreferrer">{userData.html_url}</a></span>
           </div>
+
+          <ReposList>
+            <h2>Repositorios:</h2>
+            <ul>
+                {reposData.map((repo) => (
+                <li key={repo.name}>{repo.name} - Última actualización: {new Date(repo.last_updated).toLocaleDateString()}</li>
+                ))}
+                </ul>
+
+            </ReposList>
         </DetailsStyle>
       </ContainerStyle>
-      </div>
+    </div>
   );
 };
-
 export default UserDetail;

@@ -79,7 +79,6 @@ const LoadingStyle = styled.div`
 const RepoList = ({ filter }) => {
   const { repos, users, loading, currentPage, itemsPerPage} = useGitContext();
 
-
   if (loading) {
     return <div>
       <LoadingStyle>
@@ -122,6 +121,7 @@ const RepoList = ({ filter }) => {
   const usersToshow = users.slice(startIndex, endIndex);
   let showPagination = filteredRepos.length > 0 || usersToshow.length > 0;
   
+
   return (
     <div>
       <ListStyle>

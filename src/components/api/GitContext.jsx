@@ -11,25 +11,28 @@ export const GitProvider = ({ children }) => {
   const [repos, setRepos] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data] = useState([]);
+  const [userData, setUserData] = useState({});
+  const [reposData, setReposData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [history, setHistory] = useState([]);
   const itemsPerPage = 10;
   
   const changePage = (pageNumber) => {
     setCurrentPage(pageNumber);
     };
 
-//llamada a la API para obtener repositorios y usuarios. Utilizada en RepoDetail / RepoList
 const searchRepoAndUser = async (query, page, perPage) => {
   setLoading(true);
   try {
-    const repoResponse = await axios.get(`https://api.github.com/search/repositories?q=${query}&page=${page}&per_page=${perPage}`);
-    const userResponse = await axios.get(`https://api.github.com/search/users?q=${query}&page=${page}&per_page=${perPage}`);
-
-    setRepos(repoResponse.data.items);
-    setUsers(userResponse.data.items);
-    console.log(repos.length);
+    //const repoResponse = await axios.get(`https://api.github.com/search/repositories?q=${query}&page=${page}&per_page=${perPage}`);
+    //const userResponse = await axios.get(`https://api.github.com/search/users?q=${query}&page=${page}&per_page=${perPage}`);
+    const response = await axios.post('http://localhost:3000/api/v1/search', { keyword: query, page, perPage });
+    setRepos(response.data.repos);
+    setUsers(response.data.users);
     
+    getSearchHistory();
+
   } catch (error) {
     setRepos([]);
     setUsers([]);
@@ -38,21 +41,56 @@ const searchRepoAndUser = async (query, page, perPage) => {
   }
 };
 
-//llamada a la API para obtener data del usuario. Utilizada en UserDetail
-const getUserDetails = async (username) => {
+  const getUserDetails = async (username) => {
   setLoading(true);
   try {
-    const userDataRespose = await axios.get(`https://api.github.com/users/${username}`);
-    const data = userDataRespose.data;
-    setData(data);
-    
+    const response = await axios.get(`http://localhost:3000/api/v1/user/${username}`);
+    setUserData(response.data.userData);
+    setReposData(response.data.reposData);
+
   } catch (error) {
-    setData([]);
-    
+    setUserData({});
+    setReposData([]);
   } finally {
     setLoading(false);
   }
 };
+
+const getSearchHistory = async () => {
+  setLoading(true);
+  try {
+    const response = await axios.get('http://localhost:3000/api/v1/search/history');
+    setHistory(response.data);
+  } catch (error) {
+    console.error('Error al obtener el historial:', error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const deleteHistory = async () => {
+  try {
+    await axios.delete(`http://localhost:3000/api/v1/search`);
+    setHistory([]);
+    console.log('se elimino el historial');
+  } catch (error) {
+    console.error('Error al eliminar todo el historial:', error);
+  }
+};
+
+const deleteSearchById = async (id) => {
+  try {
+    console.log('ID a eliminar:', id); 
+    await axios.delete(`http://localhost:3000/api/v1/search/${id}`);
+    setHistory((prevHistory) => prevHistory.filter((item) => item._id !== id)); 
+    console.log('se elimino la busqueda');
+  } catch (error) {
+    console.error('Error al eliminar la búsqueda:', error);
+  }
+};
+
+
+
 
 return (
   <GitContext.Provider value={{
@@ -64,7 +102,14 @@ return (
     loading,
     changePage,
     currentPage,
-    itemsPerPage
+    itemsPerPage,
+    userData,
+    reposData,
+    history,
+    getSearchHistory,
+    deleteSearchById,
+    deleteHistory
+
         }}>
     {children}
   </GitContext.Provider>
