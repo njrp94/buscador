@@ -4,6 +4,7 @@ import UserDetail from './components/results/UserDetail';
 import RepoDetail from './components/results/RepoDetail';
 import SearchBar from './components/menu/SearchBar'; 
 import RepoList from './components/results/RepoList';
+import HistoryResults from './components/results/HistoryResults';
 import styled from 'styled-components';
 
 const LogoStyle = styled.div`
@@ -30,10 +31,11 @@ function App() {
         <img src={require('./img/GitHub-Logo.png')} alt="logo" height="220px"/>
       </LogoStyle>
       <Routes>
-        <Route path="/"
-         element={<Home handleFilterChange={handleFilterChange} filter={filter} selectedFilter={selectedFilter}/>} />
+        <Route path="/" element={<Home handleFilterChange={handleFilterChange} filter={filter} selectedFilter={selectedFilter}/>} />
         <Route path="/repo/:id" element={<RepoDetail />} />
         <Route path="/user/:login" element={<UserDetail />} />
+        <Route path="/results/:id" element={<HistoryResults />} />
+
       </Routes>
     </div>
   );

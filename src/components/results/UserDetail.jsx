@@ -75,7 +75,6 @@ const UserDetail = () => {
 
   useEffect(() => {
     getUserDetails(login);
-    console.log(reposData);
   }, [login]);
 
 
