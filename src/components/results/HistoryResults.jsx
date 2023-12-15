@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
-import Pagination from './Pagination';
 import styled from 'styled-components';
 import StarRateIcon from '@mui/icons-material/StarRate';
-import { FolderShared, PeopleAlt } from '@mui/icons-material';
-import { ArrowBackOutlined } from '@mui/icons-material'
+import { FolderShared, PeopleAlt, InsertLink } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress';
-
 
 const ListStyle = styled.div`
   padding: 40px 50px 0 50px;
@@ -71,17 +68,25 @@ const ListStyle = styled.div`
     display: flex;
     align-items: center;
   }
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row;
+    
+  }
 `;
 
 const LoadingStyle = styled.div`
   display: flex;
   justify-content: center;
-
+  margin-top: 50px;
 ;`
 
 const HistoryResults = () => {
   const { id } = useParams();
-  const { loading, currentPage, getSearchResultById, searchResults } = useGitContext();
+  const { loading, getSearchResultById, searchResults } = useGitContext();
   
   useEffect(() => {
     if (id && searchResults._id !== id) {
@@ -108,64 +113,48 @@ if (loading) {
       </div>
     );
   }
-  const itemsPerPage = 30;
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  
-  const reposToShow = searchResults.repos.slice(startIndex, endIndex);
-  const usersToshow = searchResults.users.slice(startIndex, endIndex);
-  let showPagination = reposToShow.length > 0 || usersToshow.length > 0;
-  
-  
   return (
       <div>
       <ListStyle>
-        {reposToShow.length > 0 && (
+        {searchResults.repos.length > 0 && (
           <div className="list-container">
             <ul>
               <h3><FolderShared/> Repositorios</h3>
 
-              {reposToShow.map((item) => (
+              {searchResults.repos.map((item) => (
                 <li key={item.id}>
-                  
-                  <Link to={`/repo/${item.id}`} state={{ repo: item }}>
                     <div className="repo-info">
                       {item.name}
                       <span><StarRateIcon />{item.stargazers_count}</span>
                     </div>
-                    </Link>
-                    
                   {item.description && <p>{item.description}</p>}
                   <p>Ultima actualizacion: {new Date(item.updated_at).toLocaleDateString()}</p>
+
+                  <span className='link'><InsertLink/><a href={item.html_url} target="_blank" rel="noopener noreferrer">{item.html_url}</a></span>
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        {reposToShow.length > 0 && (
+        {searchResults.repos.length > 0 && (
           <div className="list-container">
             <ul>
               <h3><PeopleAlt/> Usuarios</h3>
-
-              {usersToshow.map((item) => (
+              {searchResults.users.map((item) => (
                 <li key={item.login}>
-                  {item.login && (
-                    <Link to={`/user/${item.login}`} state={{ user: item }}>
-
                     <div className="user-info">
                       <img src={item.avatar_url} alt="avatar" height="60px"/>
                       {item.login}
+                      <span className='link'><InsertLink/><a href={item.html_url} target="_blank" rel="noopener noreferrer">{item.html_url}</a></span>
+
                       </div>
-                    </Link>
-              )}
               </li>
             ))}
           </ul>
         </div>
       )}
-      
     </ListStyle>
     
   </div>

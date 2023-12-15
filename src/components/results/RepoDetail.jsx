@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import styled from 'styled-components';
@@ -8,11 +8,13 @@ import { ArrowBackOutlined, InsertLink, Person } from '@mui/icons-material'
 
 const ContainerStyle = styled.div`
     display:flex;
+    justify-content: center;
     margin-top: 30px;
 
     .arrow {
-        margin-left: 100px;
         display: flex;
+        flex-direction: row;
+        gap: 40px;
         align-items: center;
     }
 
@@ -39,8 +41,8 @@ const UserStyle = styled.div`
     `;
 
 const DetailsStyle = styled.div`
-    margin: 25px 0 0 100px;
-
+        padding-left: 40px;
+        
     a {
         text-decoration: none;
         color: darkblue;
@@ -71,25 +73,19 @@ const DetailsStyle = styled.div`
 
 const RepoDetail = () => {
   const { id } = useParams();
-  const { repos, loading, searchRepoAndUser } = useGitContext();
-
-  useEffect(() => {
-    if (loading) {
-      searchRepoAndUser();
-    }
-  }, [loading, searchRepoAndUser]);
-
-  const repo = loading ? null : repos.find((repo) => repo.id === Number(id));
-
+  const { repos } = useGitContext();
+  const repo = repos.find((repo) => repo.id === Number(id));
+    
   return (
       <div>
     <ContainerStyle>
-        <div className='arrow'>
-            <Link to="/"><span><ArrowBackOutlined/></span></Link>
-        </div>
+
 
         <UserStyle>    
+        <div className='arrow'>
+            <Link to="/"><span><ArrowBackOutlined/></span></Link>
             <img src={repo.owner.avatar_url} alt="avatar" height="200px"/>
+            </div>
             <p><Person/>{repo.owner && repo.owner.login}</p>
         </UserStyle>
         

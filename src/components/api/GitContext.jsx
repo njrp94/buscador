@@ -19,7 +19,6 @@ export const GitProvider = ({ children }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchPerformed, setSearchPerformed] = useState(false);
 
-
   const itemsPerPage = 10;
   
   const changePage = (pageNumber) => {
@@ -52,7 +51,6 @@ const searchRepoAndUser = async (query, page, perPage) => {
     setUserData(response.data.userData);
     setReposData(response.data.reposData);
 
-    getSearchHistory();
 
   } catch (error) {
     setUserData({});
@@ -95,6 +93,7 @@ const deleteHistory = async () => {
   try {
     await axios.delete('http://localhost:3000/api/v1/search');
     setHistory([]);
+
   } catch (error) {
     console.error('Error al eliminar todo el historial:', error);
   }
@@ -104,11 +103,11 @@ const deleteSearchById = async (id) => {
   try {
     await axios.delete(`http://localhost:3000/api/v1/search/${id}`);
     setHistory((prevHistory) => prevHistory.filter((item) => item._id !== id)); 
+
   } catch (error) {
     console.error('Error al eliminar la búsqueda:', error);
   }
 };
-
 
 return (
   <GitContext.Provider value={{
@@ -132,7 +131,6 @@ return (
     setSearchResults,
     searchPerformed,
     setSearchPerformed,
-
         }}>
     {children}
   </GitContext.Provider>

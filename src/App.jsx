@@ -17,13 +17,10 @@ function App() {
   const [filter, setFilter] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
 
-
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
     setSelectedFilter(newFilter);
-
   };
-
 
   return (
     <div>
@@ -35,7 +32,6 @@ function App() {
         <Route path="/repo/:id" element={<RepoDetail />} />
         <Route path="/user/:login" element={<UserDetail />} />
         <Route path="/results/:id" element={<HistoryResults />} />
-
       </Routes>
     </div>
   );
@@ -48,7 +44,6 @@ function Home({ handleFilterChange, filter, selectedFilter }) {
       <SearchBar onFilterChange={handleFilterChange}
        selectedFilter={selectedFilter}/>
       <RepoList filter={filter}/>
-      
     </>
   );
 }

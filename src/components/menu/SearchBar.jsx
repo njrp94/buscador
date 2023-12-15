@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import styled from 'styled-components';
 import { Search, Clear } from '@mui/icons-material';
@@ -131,8 +130,6 @@ const SearchBar = ({ onFilterChange, selectedFilter }) => {
     const newTab = window.open(`/results/${search._id}`, '_blank');
     newTab.focus();
   };
-  
-  
   
   const handleDeleteSearch = async (searchId, event) => {
     event.stopPropagation();
