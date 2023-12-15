@@ -42,10 +42,12 @@ function App() {
 }
 
 function Home({ handleFilterChange, filter, selectedFilter }) {
+
   return (
     <>
-      <SearchBar onFilterChange={handleFilterChange} selectedFilter={selectedFilter} />
-      <RepoList filter={filter} />
+      <SearchBar onFilterChange={handleFilterChange}
+       selectedFilter={selectedFilter}/>
+      <RepoList filter={filter}/>
       
     </>
   );

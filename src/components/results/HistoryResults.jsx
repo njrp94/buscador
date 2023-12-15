@@ -1,11 +1,12 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import Pagination from './Pagination';
 import styled from 'styled-components';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import { FolderShared, PeopleAlt } from '@mui/icons-material';
 import { ArrowBackOutlined } from '@mui/icons-material'
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const ListStyle = styled.div`
@@ -79,33 +80,48 @@ const LoadingStyle = styled.div`
 ;`
 
 const HistoryResults = () => {
-    const location = useLocation();
-    const { loading, currentPage, itemsPerPage } = useGitContext();
-    const historyResults = location.state?.searchResults || {};
-    const { repos, users } = historyResults;
+  const { id } = useParams();
+  const { loading, currentPage, getSearchResultById, searchResults } = useGitContext();
+  
+  useEffect(() => {
+    if (id && searchResults._id !== id) {
+      getSearchResultById(id);
+    }
 
+  }, []);
+  
 if (loading) {
     return <div>
       <LoadingStyle>
-      <p>Buscando...</p>
+      <CircularProgress color='secondary'></CircularProgress>
       </LoadingStyle>
       </div>
   };
+  
+  if (!searchResults.repos || !searchResults.users) {
+
+    return (
+      <div>
+        <ListStyle>
+          <p>Sin resultados</p>
+        </ListStyle>
+      </div>
+    );
+  }
+  const itemsPerPage = 30;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-
-  const reposToShow = repos.slice(startIndex, endIndex);
-  const usersToshow = users.slice(startIndex, endIndex);
-  let showPagination = repos.length > 0 || usersToshow.length > 0;
   
-
+  const reposToShow = searchResults.repos.slice(startIndex, endIndex);
+  const usersToshow = searchResults.users.slice(startIndex, endIndex);
+  let showPagination = reposToShow.length > 0 || usersToshow.length > 0;
+  
+  
   return (
       <div>
-        <Link to="/"><span><ArrowBackOutlined /></span></Link>
-      
       <ListStyle>
-        {repos.length > 0 && (
+        {reposToShow.length > 0 && (
           <div className="list-container">
             <ul>
               <h3><FolderShared/> Repositorios</h3>
@@ -128,7 +144,7 @@ if (loading) {
           </div>
         )}
 
-        {users.length > 0 && (
+        {reposToShow.length > 0 && (
           <div className="list-container">
             <ul>
               <h3><PeopleAlt/> Usuarios</h3>
@@ -149,8 +165,9 @@ if (loading) {
           </ul>
         </div>
       )}
+      
     </ListStyle>
-    {showPagination && <Pagination />}
+    
   </div>
 
   );

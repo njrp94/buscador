@@ -5,6 +5,8 @@ import Pagination from './Pagination';
 import styled from 'styled-components';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import { FolderShared, PeopleAlt } from '@mui/icons-material';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const ListStyle = styled.div`
   padding: 40px 50px 0 50px;
@@ -15,7 +17,6 @@ const ListStyle = styled.div`
 
   .list-container {
     flex: 1;
-    padding: 20px;
     border: 2px solid purple;
     border-radius: 10px;
     ;
@@ -51,9 +52,14 @@ const ListStyle = styled.div`
   li {
     list-style-type: none;
     text-decoration: none;
-    margin-bottom: 30px;
-  }
+    margin-bottom: 20px;
+    padding: 10px 0 10px 50px;
+    }
 
+  li:hover {
+    background-color: #efeff5;
+  }
+  
   p {
     font-size: 15px;
     font-weight: 300;
@@ -66,27 +72,46 @@ const ListStyle = styled.div`
   ul h3 {
     gap: 10px;
     display: flex;
+    flex-direction: column;
     align-items: center;
+  }
+
+  ul {
+    padding: 0;
   }
 `;
 
 const LoadingStyle = styled.div`
   display: flex;
   justify-content: center;
+  padding-top: 100px;
+
 
 ;`
 
 const RepoList = ({ filter }) => {
-  const { repos, users, loading, currentPage, itemsPerPage } = useGitContext();
+  const { repos, users, loading, currentPage, itemsPerPage, searchPerformed } = useGitContext();
 
 
   if (loading) {
     return <div>
       <LoadingStyle>
-      <p>Buscando...</p>
+        <CircularProgress color='secondary'></CircularProgress>
       </LoadingStyle>
       </div>
   };
+
+  if (searchPerformed && repos.length === 0 && users.length === 0) {
+    return (
+      <div>
+        <ListStyle>
+          <p>La búsqueda no dio resultados.</p>
+        </ListStyle>
+      </div>
+    );
+  }
+
+
 
   let filteredRepos = repos;
 
@@ -122,34 +147,34 @@ const RepoList = ({ filter }) => {
   const usersToshow = users.slice(startIndex, endIndex);
   let showPagination = filteredRepos.length > 0 || usersToshow.length > 0;
   
+ 
 
-  return (
-    <div>
-      <ListStyle>
-        {repos.length > 0 && (
-          <div className="list-container">
-            <ul>
-              <h3><FolderShared/> Repositorios</h3>
+return (
+  <div>
+  <ListStyle>
+    {repos.length > 0 && (
+      <div className="list-container">
+        <ul>
+          <h3><FolderShared/> Repositorios</h3>
 
-              {reposToShow.map((item) => (
-                <li key={item.id}>
-                  
-                  <Link to={`/repo/${item.id}`} state={{ repo: item }}>
-                    <div className="repo-info">
-                      {item.name}
-                      <span><StarRateIcon />{item.stargazers_count}</span>
-                    </div>
-                    </Link>
-                    
-                  {item.description && <p>{item.description}</p>}
-                  <p>Ultima actualizacion: {new Date(item.updated_at).toLocaleDateString()}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+          {reposToShow.map((item) => (
+            <li key={item.id}>
+              <Link to={`/repo/${item.id}`} state={{ repo: item }}>
+                <div className="repo-info">
+                  {item.name}
+                  <span><StarRateIcon />{item.stargazers_count}</span>
+                </div>
+              </Link>
+                
+              {item.description && <p>{item.description}</p>}
+              <p>Ultima actualizacion: {new Date(item.updated_at).toLocaleDateString()}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
 
-        {users.length > 0 && (
+    {users.length > 0 && (
           <div className="list-container">
             <ul>
               <h3><PeopleAlt/> Usuarios</h3>
@@ -158,24 +183,21 @@ const RepoList = ({ filter }) => {
                 <li key={item.login}>
                   {item.login && (
                     <Link to={`/user/${item.login}`} state={{ user: item }}>
-
-                    <div className="user-info">
-                      <img src={item.avatar_url} alt="avatar" height="60px"/>
-                      {item.login}
+                      <div className="user-info">
+                        <img src={item.avatar_url} alt="avatar" height="60px"/>
+                        {item.login}
                       </div>
                     </Link>
-              )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </ListStyle>
-    {showPagination && <Pagination />}
-  </div>
-
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </ListStyle>
+      {showPagination && <Pagination />}
+    </div>
   );
-  
 };
 
 

@@ -17,6 +17,9 @@ export const GitProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [history, setHistory] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [searchPerformed, setSearchPerformed] = useState(false);
+
+
   const itemsPerPage = 10;
   
   const changePage = (pageNumber) => {
@@ -30,10 +33,8 @@ const searchRepoAndUser = async (query, page, perPage) => {
     setRepos(response.data.repos);
     setUsers(response.data.users);
 
-    setSearchResults(response.data);
-    console.log('Resultados de la búsqueda:', response.data);
-
-    await getSearchHistory();
+    getSearchHistory();
+    setSearchPerformed(true);
 
   } catch (error) {
     setRepos([]);
@@ -51,6 +52,8 @@ const searchRepoAndUser = async (query, page, perPage) => {
     setUserData(response.data.userData);
     setReposData(response.data.reposData);
 
+    getSearchHistory();
+
   } catch (error) {
     setUserData({});
     setReposData([]);
@@ -64,10 +67,25 @@ const getSearchHistory = async () => {
   try {
     const response = await axios.get('http://localhost:3000/api/v1/search/history');
     setHistory(response.data);
-    console.log(response);
 
   } catch (error) {
     console.error('Error al obtener el historial:', error.message);
+    setHistory([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const getSearchResultById = async (id) => {
+  setLoading(true);
+  try {
+    const response = await axios.get(`http://localhost:3000/api/v1/search/history/${id}`);
+    setSearchResults(response.data);
+    setSearchPerformed(true);
+    
+  } catch (error) {
+    console.error('Error al obtener resultados por ID:', error.message);
+    setSearchResults({ repos: [], users: [] });
   } finally {
     setLoading(false);
   }
@@ -77,7 +95,6 @@ const deleteHistory = async () => {
   try {
     await axios.delete('http://localhost:3000/api/v1/search');
     setHistory([]);
-    console.log('se elimino el historial');
   } catch (error) {
     console.error('Error al eliminar todo el historial:', error);
   }
@@ -85,7 +102,6 @@ const deleteHistory = async () => {
 
 const deleteSearchById = async (id) => {
   try {
-    console.log('ID a eliminar:', id); 
     await axios.delete(`http://localhost:3000/api/v1/search/${id}`);
     setHistory((prevHistory) => prevHistory.filter((item) => item._id !== id)); 
   } catch (error) {
@@ -111,8 +127,11 @@ return (
     getSearchHistory,
     deleteSearchById,
     deleteHistory,
+    getSearchResultById,
     searchResults,
-    setSearchResults
+    setSearchResults,
+    searchPerformed,
+    setSearchPerformed,
 
         }}>
     {children}

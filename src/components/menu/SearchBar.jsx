@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import styled from 'styled-components';
-import { Search } from '@mui/icons-material';
+import { Search, Clear } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const ContainerStyle = styled.div`
@@ -29,7 +29,7 @@ const SearchStyle = styled.input`
   border: 2px solid #ccc;
   border-radius: 10px 0 0 10px;
   font-size: 15px;
-  width: 375px;
+  width: 400px;
 `;
 
 const ButtonStyle = styled.button`
@@ -68,15 +68,47 @@ const HistoryList = styled.ul`
   border: 2px solid #ccc;
   border-radius: 0 0 10px 10px;
   width: 400px;
+  display: inline-grid;
+  background-color: white;
+  
+  li {
+
+  }
+
+  .delete {
+    float: right;
+    margin-bottom: 10px;
+
+  }
+
+  .delete button {
+    color: lightslategray;
+    background: none;
+    border: none;
+  }
+
+  .deleteAll {
+    display: grid;
+    border-top: 1px solid purple;
+    padding: 10px 0 0 10px;
+  }
+  
+  .deleteAll button {
+    background: none;
+    border: none;
+  }
+
+  
+
 `;
 
 
 const SearchBar = ({ onFilterChange, selectedFilter }) => {
-  const navigate = useNavigate();
-  const { getSearchHistory, searchRepoAndUser, history, deleteSearchById, deleteHistory, searchResults } = useGitContext();
+  const { setSearchPerformed, getSearchHistory, searchRepoAndUser, history, deleteSearchById, deleteHistory, searchResults } = useGitContext();
   const [query, setQuery] = useState('');
   const [showHistory, setShowHistory] = useState(false);
   const [isHistoryLoaded, setIsHistoryLoaded] = useState(false);
+
 
   useEffect(() => {
     if (!isHistoryLoaded) {
@@ -85,20 +117,25 @@ const SearchBar = ({ onFilterChange, selectedFilter }) => {
     }
   }, [isHistoryLoaded, getSearchHistory]);
 
-  const handleSearch = (selectedFilter) => {
+
+  const handleSearch = async (selectedFilter) => {
     if (query.trim() !== '') {
       searchRepoAndUser(query, selectedFilter);
       getSearchHistory();
+      setSearchPerformed(true);
     }
   };
+  
 
   const handleHistoryItemClick = (search) => {
-    navigate(`/results/${search._id}`, {
-      state: { term: search.term, searchResults: search.results }
-    });
+    const newTab = window.open(`/results/${search._id}`, '_blank');
+    newTab.focus();
   };
   
-  const handleDeleteSearch = async (searchId) => {
+  
+  
+  const handleDeleteSearch = async (searchId, event) => {
+    event.stopPropagation();
     await deleteSearchById(searchId);
   };
 
@@ -109,6 +146,7 @@ const SearchBar = ({ onFilterChange, selectedFilter }) => {
   const handleKeyPress = (e, selectedFilter) => {
     if (e.key === 'Enter' && query.trim() !== '') {
       searchRepoAndUser(query, selectedFilter);
+
     }
   };
 
@@ -117,7 +155,6 @@ const SearchBar = ({ onFilterChange, selectedFilter }) => {
     onFilterChange(newFilter);
   };
 
-
   const handleOutsideClick = (event) => {
     const searchBar = document.getElementById('search-bar');
     if (searchBar && !searchBar.contains(event.target)) {
@@ -125,9 +162,10 @@ const SearchBar = ({ onFilterChange, selectedFilter }) => {
     }
   };
   
-const handleSearchBarClick = () => {
+  const handleSearchBarClick = () => {
     setShowHistory(!showHistory);
   };
+
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
@@ -170,17 +208,30 @@ const handleSearchBarClick = () => {
       </SearchContainer>
       
       {showHistory && (
-      <HistoryList>
-        {history.map((search) => (
-        <li key={search.timestamp} onClick={() => handleHistoryItemClick(search)}>
-          {search.term}
-            <button onClick={() => handleDeleteSearch(search._id)}>Eliminar</button>
-          </li>
-        ))}
-              <button onClick={handleDeleteHistory}><DeleteIcon></DeleteIcon></button>
-
-      </HistoryList>
-      )}
+          <HistoryList>
+            {history.length === 0 ? (
+              <li>El historial esta vacio</li>
+            ) : (
+              history.map((search) => (
+                <li key={search.timestamp} onClick={() => handleHistoryItemClick(search)}>
+                  {search.term}
+                  <div className='delete'>
+                    <button onClick={(event) => handleDeleteSearch(search._id, event)}>
+                      <Clear />
+                    </button>
+                  </div>
+                </li>
+              ))
+            )}
+            {history.length > 0 && (
+              <div className='deleteAll'>
+                <button onClick={handleDeleteHistory}>
+                  <DeleteIcon />
+                </button>
+              </div>
+            )}
+          </HistoryList>
+        )}
       </SearchAndHistoryContainer>
     </ContainerStyle>
   );

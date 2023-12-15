@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useGitContext } from '../api/GitContext';
 import styled from 'styled-components';
@@ -71,9 +71,16 @@ const DetailsStyle = styled.div`
 
 const RepoDetail = () => {
   const { id } = useParams();
-  const { repos } = useGitContext();
-  const repo = repos.find((repo) => repo.id === Number(id));
-    
+  const { repos, loading, searchRepoAndUser } = useGitContext();
+
+  useEffect(() => {
+    if (loading) {
+      searchRepoAndUser();
+    }
+  }, [loading, searchRepoAndUser]);
+
+  const repo = loading ? null : repos.find((repo) => repo.id === Number(id));
+
   return (
       <div>
     <ContainerStyle>
