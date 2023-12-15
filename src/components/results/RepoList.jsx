@@ -17,8 +17,9 @@ const ListStyle = styled.div`
 
   .list-container {
     flex: 1;
-    border: 2px solid purple;
+    border: 2px solid lightgrey;
     border-radius: 10px;
+    box-shadow: 0px 0px 14px 0px #28133740;
     ;
   }
 
@@ -74,6 +75,7 @@ const ListStyle = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-weight: 300;
   }
 
   ul {

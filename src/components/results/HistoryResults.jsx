@@ -15,9 +15,9 @@ const ListStyle = styled.div`
 
   .list-container {
     flex: 1;
-    padding: 20px;
-    border: 2px solid purple;
+    border: 2px solid lightgrey;
     border-radius: 10px;
+    box-shadow: 0px 0px 14px 0px #28133740;
     ;
   }
 
@@ -67,6 +67,7 @@ const ListStyle = styled.div`
     gap: 10px;
     display: flex;
     align-items: center;
+    font-weight: 300;
   }
 
   .link {
